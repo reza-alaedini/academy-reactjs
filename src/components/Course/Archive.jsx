@@ -187,7 +187,7 @@ const Archive = () => {
             <div className="col-lg-9 col-md-8 col-sm-12 col-xs-12">
               <section className="terms-items">
                 <div className="row">
-                  <Course courses={archiveCourses} />
+                  <Course courses={archiveCourses} imgHeight={170}/>
                 </div>
 
                 {/* Pagination */}

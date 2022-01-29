@@ -1,5 +1,7 @@
-import React, { useEffect } from "react";
-import { Routes, Route } from "react-router-dom";
+import React, { useEffect, Fragment } from "react";
+import { Routes, Route, Navigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { isEmpty } from "lodash";
 
 import MainLayout from "../components/Layouts/MainLayout";
 import Course from "../components/Course/Course";
@@ -9,12 +11,16 @@ import Archive from "../components/Course/Archive";
 import Account from "../components/Account/Account";
 import EditAccount from "../components/Account/Edit_Account";
 import SingleCourse from "../components/Course/SingleCourse";
-import { useSelector, useDispatch } from "react-redux";
 import { paginate } from "./../util/paginate";
 import { addUser, deleteUser } from "./../Redux/Actions/user";
 import { decode } from "../util/decode";
 import Logout from "./../components/Login/Logout";
 import UserContext from "../components/context/userContext";
+import NotFound from "./../components/common/404";
+import PrivateLayout from "../components/Layouts/PrivateLayout";
+import Dashboard from "../components/admin/Dashboard";
+import CourseTable from "./../components/admin/CourseTable";
+import AdminContext from "../components/context/AdminContext";
 
 const Academy = () => {
   const dispatch = useDispatch();
@@ -35,34 +41,76 @@ const Academy = () => {
   }, []);
 
   const courses = useSelector((state) => state.courses);
+  const user = useSelector((state) => state.user);
   const indexCourses = paginate(courses, 1, 8);
   return (
-    <MainLayout>
+    <Fragment>
+      {/* <MainLayout> */}
       <Routes>
+        <Route path="/" element={<MainLayout />}>
+          <Route
+            path="/login"
+            element={
+              <UserContext>
+                <Login />
+              </UserContext>
+            }
+          />
+          <Route
+            path="/register"
+            element={
+              <UserContext>
+                <Register />
+              </UserContext>
+            }
+          />
+          <Route path="/logout" element={<Logout />} />
+          <Route path="/archive" element={<Archive />} />
+          <Route path="/account" element={<Account />} />
+          <Route path="/editAccount" element={<EditAccount />} />
+          <Route path="/course/:id" element={<SingleCourse />} />
+          <Route
+            path="/"
+            element={
+              indexCourses.length > 0 ? (
+                <Course courses={indexCourses} />
+              ) : (
+                <h2 style={{ textAlign: "center", margin: "2em" }}>
+                  هیچ دوره ایی جهت نمایش موجود نیست !
+                </h2>
+              )
+            }
+          />
+          <Route path="*" element={<NotFound />} />
+        </Route>
+
         <Route
-          path="/login"
+          path="/dashboard"
           element={
-            <UserContext>
-              <Login />
-            </UserContext>
+            !isEmpty(user) && user.isAdmin ? (
+              <PrivateLayout />
+            ) : (
+              <Navigate to="/" />
+            )
           }
-        />
-        <Route
-          path="/register"
-          element={
-            <UserContext>
-              <Register />
-            </UserContext>
-          }
-        />
-        <Route path="/logout" element={<Logout />} />
-        <Route path="/archive" element={<Archive />} />
-        <Route path="/account" element={<Account />} />
-        <Route path="/editAccount" element={<EditAccount />} />
-        <Route path="/course/:id" element={<SingleCourse />} />
-        <Route path="/" element={<Course courses={indexCourses} />} />
+        >
+          <Route path="/dashboard" element={<Dashboard courses={courses} />} />
+          <Route
+            path="/dashboard/courses"
+            element={
+              !isEmpty(user) && user.isAdmin ? (
+                <AdminContext courses={courses}>
+                  <CourseTable />
+                </AdminContext>
+              ) : (
+                <Navigate to="/" />
+              )
+            }
+          />
+        </Route>
       </Routes>
-    </MainLayout>
+      {/* </MainLayout> */}
+    </Fragment>
   );
 };
 

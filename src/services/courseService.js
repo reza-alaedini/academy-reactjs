@@ -8,3 +8,15 @@ export const getAllCourses = () => {
 export const getCourse = (courseId) => {
   return http.get(`${config.toplearnapi}/api/course/${courseId}`);
 };
+
+export const newCourse = (course) => {
+  return http.post(`${config.toplearnapi}/api/course`, course);
+};
+
+export const deleteCourse = (courseId) => {
+  return http.delete(`${config.toplearnapi}/api/course/${courseId}`);
+};
+
+export const updateCourse = (course, courseId) => {
+  return http.put(`${config.toplearnapi}/api/course/${courseId}`, course);
+};

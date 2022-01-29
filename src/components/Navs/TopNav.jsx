@@ -44,9 +44,11 @@ const TopNav = () => {
             {!isEmpty(user) ? (
               <div className="loggein ">
                 <i className="zmdi zmdi-account"></i>
-                <NavLink to="/account"> {user.fullname} </NavLink> {" "}
-                /
-                {" "}<NavLink to="/logout">خروج</NavLink>
+                <NavLink to="/account"> {user.fullname} </NavLink>{" "}
+                {user.isAdmin ? (
+                  <NavLink to="/dashboard"> / پنل ادمین</NavLink>
+                ) : null}
+                / <NavLink to="/logout">خروج</NavLink>
               </div>
             ) : (
               <div className="signin">

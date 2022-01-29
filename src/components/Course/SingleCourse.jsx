@@ -1,17 +1,21 @@
 import React, { Fragment, useEffect } from "react";
-import { NavLink, useParams } from "react-router-dom";
+import { NavLink, useParams, Navigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { getSingleCourse } from "../../Redux/Actions/course";
+import ShowImage from "../common/ShowImage";
+import { courseIdValidator } from "./../../util/idValidator";
 
 const SingleCourse = ({ match }) => {
   const course = useSelector((state) => state.course);
   const dispatch = useDispatch();
-  const {id} = useParams();
+  const { id } = useParams();
 
   useEffect(() => {
-    dispatch(getSingleCourse(id));
+    if (courseIdValidator(id)) dispatch(getSingleCourse(id));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  if (!courseIdValidator(id)) return <Navigate to="/404" />;
 
   return (
     <Fragment>
@@ -39,10 +43,11 @@ const SingleCourse = ({ match }) => {
           <div className="row">
             <div className="col-md-8 col-sm-12 col-xs-12 pull-left">
               <section className="term-description">
-                <img
+                {/* <img
                   src={`https://toplearnapi.ghorbany.dev/${course.imageUrl}`}
                   alt=""
-                />
+                /> */}
+                <ShowImage image={course.imageUrl} height={500} />
 
                 <p>{course.info}</p>
 
@@ -293,7 +298,11 @@ const SingleCourse = ({ match }) => {
                   </li>
                 </ul>
 
-                <a href="##"> شرکت در دوره : {course.price === 0 ? "رایگان" : `${course.price} تومان`} </a>
+                <a href="##">
+                  {" "}
+                  شرکت در دوره :{" "}
+                  {course.price === 0 ? "رایگان" : `${course.price} تومان`}{" "}
+                </a>
               </div>
 
               <article className="teacher-info">

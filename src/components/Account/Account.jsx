@@ -2,8 +2,16 @@ import React, { Fragment } from "react";
 import { Link, NavLink, Navigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { isEmpty } from "lodash";
+import { gregorian_to_jalali } from "./../../util/jalali";
 
 const Account = () => {
+  const dateNow = new Date();
+  const JDate = gregorian_to_jalali(
+    dateNow.getFullYear(),
+    dateNow.getMonth() + 1,
+    dateNow.getDate()
+  );
+
   const user = useSelector((state) => state.user);
 
   if (isEmpty(user)) return <Navigate to="/" replace />; // Protecting the "Route"
@@ -38,7 +46,7 @@ const Account = () => {
                     </div>
                     <div className="detail">
                       <span> {user.fullname} </span>
-                      <span> عضویت : 03/02/1400 </span>
+                      <span>{` عضویت : ${JDate[0]}/${JDate[1]}/${JDate[2]}`}</span>
                     </div>
                   </div>
 
@@ -97,8 +105,8 @@ const Account = () => {
                         </li>
                         <li>
                           {" "}
-                          <i className="zmdi zmdi-calendar-check"></i> تاریخ
-                          عضویت : 03/02/1400{" "}
+                          <i className="zmdi zmdi-calendar-check"></i> 
+                          {`تاریخ عضویت : ${JDate[0]}/${JDate[1]}/${JDate[2]}`}
                         </li>
                         <li>
                           {" "}

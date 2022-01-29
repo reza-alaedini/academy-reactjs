@@ -1,5 +1,6 @@
 import React from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, Outlet } from "react-router-dom";
+import LoadingBar from "react-redux-loading-bar";
 
 import TopNav from "../Navs/TopNav";
 import Header from "../common/Header";
@@ -16,6 +17,7 @@ const MainLayout = (props) => {
       </Helmet>
 
       <div className="landing-layer">
+        <LoadingBar style={{ backgroundColor: "lime", height: "5px" }} />
         <div className="container">
           <TopNav />
           {location.pathname === "/" ? <Header /> : null}
@@ -27,7 +29,8 @@ const MainLayout = (props) => {
         </div>
       </div>
       <main id="home-page">
-        <div className="container">{props.children}</div>
+        {/* <div className="container">{props.children}</div> */}
+        <div className="container"><Outlet /></div>
       </main>
       <Footer />
     </div>

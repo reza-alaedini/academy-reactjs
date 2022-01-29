@@ -7,6 +7,7 @@ import { registerUser, loginUser } from "./../../services/userServices";
 import { addUser } from "./../../Redux/Actions/user";
 import { decode } from "./../../util/decode";
 import { error, success } from "./../../util/message";
+import { hideLoading, showLoading } from "react-redux-loading-bar";
 
 const UserContext = ({ children }) => {
   const [fullname, setFullname] = useState("");
@@ -47,9 +48,11 @@ const UserContext = ({ children }) => {
 
     try {
       if (validator.current.allValid()) {
+        dispatch(showLoading());
         const { status } = await registerUser(user);
         if (status === 201) {
           success("شخص با موفقیت اضافه شد !");
+          dispatch(hideLoading());
           navigate("/login", { replace: true });
           resetStates();
         }
@@ -59,7 +62,8 @@ const UserContext = ({ children }) => {
       }
     } catch (ex) {
       error("مشکلی پیش آمد !");
-      console.log(ex);
+      dispatch(hideLoading());
+      // console.log(ex);
     }
   };
 
@@ -72,12 +76,14 @@ const UserContext = ({ children }) => {
 
     try {
       if (validator.current.allValid()) {
+        dispatch(showLoading());
         const { status, data } = await loginUser(user);
         if (status === 200) {
-          console.log(data);
+          // console.log(data);
           success("کاربر با موفقیت وارد شد !");
           localStorage.setItem("token", data.token);
           dispatch(addUser(decode(data.token).payload.user));
+          dispatch(hideLoading());
           navigate("/", { replace: true });
           resetStates();
         }
@@ -86,8 +92,9 @@ const UserContext = ({ children }) => {
         forceUpdate(1);
       }
     } catch (ex) {
-      console.log(ex);
+      // console.log(ex);
       error("مشکلی پیش آمد !");
+      dispatch(hideLoading());
     }
   };
 
