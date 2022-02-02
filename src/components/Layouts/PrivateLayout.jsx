@@ -13,8 +13,10 @@ const PrivateLayout = ({ children }) => {
       <Helmet>
         <title>آکادمی | داشبورد</title>
       </Helmet>
-      <LoadingBar style={{ backgroundColor: "lime", height: "5px" }} />
       <nav className="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <LoadingBar
+          style={{ backgroundColor: "lime", height: "5px", zIndex: "1" }}
+        />
         <div className="navbar-header">
           <Link className="navbar-brand" to="/dashboard">
             داشبورد آکادمی

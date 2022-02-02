@@ -11,6 +11,7 @@ const CourseTable = () => {
     handleChangePage,
     courseData,
     openNewCourseDialog,
+    openEditCourseDialog,
   } = context;
 
   return (
@@ -55,7 +56,12 @@ const CourseTable = () => {
                   </td>
                   <td>{course.price === 0 ? "رایگانــــ" : course.price}</td>
                   <td>
-                    <button className="btn btn-warning">ویرایش</button>
+                    <button
+                      className="btn btn-warning"
+                      onClick={() => openEditCourseDialog(course)}
+                    >
+                      ویرایش
+                    </button>
                   </td>
                   <td>
                     <button className="btn btn-danger">حذف</button>
