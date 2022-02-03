@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { dashContext } from "./dashContext";
 import { paginate } from "./../../util/paginate";
 import NewCourseDialog from "./../admin/dialogs/newCourseDialog";
 import EditCourseDialog from "../admin/dialogs/EditDialog";
+import DeleteCourseDialog from "../admin/dialogs/DeleteCourseDialog";
 
 const AdminContext = ({ children, courses }) => {
   const [currentPage, setcurrentPage] = useState(1);
@@ -11,9 +12,15 @@ const AdminContext = ({ children, courses }) => {
   const [currentCourse, setCurrentCourse] = useState({});
   const [newCourseDialog, setNewCourseDialog] = useState(false);
   const [editCourseDialog, setEditCourseDialog] = useState(false);
+  const [deleteCourseDialog, setDeleteCourseDialog] = useState(false);
+
+  const [search, setSearch] = useState("");
+  const [coursesList, setCoursesList] = useState([]);
 
   const openNewCourseDialog = () => setNewCourseDialog(true);
   const closeNewCourseDialog = () => setNewCourseDialog(false);
+
+  useEffect(() => setCoursesList(courses), [courses]);
 
   const openEditCourseDialog = (course) => {
     setEditCourseDialog(true);
@@ -21,11 +28,24 @@ const AdminContext = ({ children, courses }) => {
   };
   const closeEditCourseDialog = () => setEditCourseDialog(false);
 
+  const openDeleteCourseDialog = (course) => {
+    setDeleteCourseDialog(true);
+    setCurrentCourse(course);
+  };
+
+  const closeDeleteCourseDialog = () => {
+    setDeleteCourseDialog(false);
+  };
+
   const handleChangePage = (page) => {
     setcurrentPage(page);
   };
 
-  const courseData = paginate(courses, currentPage, perPage);
+  const filteredCourses = coursesList.filter((course) =>
+    course.title.includes(search)
+  );
+
+  const courseData = paginate(filteredCourses, currentPage, perPage);
 
   return (
     <dashContext.Provider
@@ -36,6 +56,9 @@ const AdminContext = ({ children, courses }) => {
         courseData,
         openNewCourseDialog,
         openEditCourseDialog,
+        openDeleteCourseDialog,
+        setSearch,
+        filteredCourses,
       }}
     >
       <NewCourseDialog
@@ -45,6 +68,11 @@ const AdminContext = ({ children, courses }) => {
       <EditCourseDialog
         showDialog={editCourseDialog}
         closeDialog={closeEditCourseDialog}
+        course={currentCourse}
+      />
+      <DeleteCourseDialog
+        showDialog={deleteCourseDialog}
+        closeDialog={closeDeleteCourseDialog}
         course={currentCourse}
       />
       {children}

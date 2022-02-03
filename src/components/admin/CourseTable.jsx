@@ -12,6 +12,9 @@ const CourseTable = () => {
     courseData,
     openNewCourseDialog,
     openEditCourseDialog,
+    openDeleteCourseDialog,
+    filteredCourses,
+    setSearch,
   } = context;
 
   return (
@@ -26,6 +29,7 @@ const CourseTable = () => {
           <input
             className="form-control"
             placeholder="جستجوی دوره"
+            onChange={(e) => setSearch(e.target.value)}
             style={{ marginRight: "40em" }}
           />
         </div>
@@ -49,7 +53,8 @@ const CourseTable = () => {
                   <td>
                     <a
                       href={`https://toplearnapi.ghorbany.dev/${course.imageUrl}`}
-                      className="btn btn-primary"
+                      target="_blank"
+                      className="btn btn-info" rel="noreferrer"
                     >
                       تصویر دوره
                     </a>
@@ -64,7 +69,12 @@ const CourseTable = () => {
                     </button>
                   </td>
                   <td>
-                    <button className="btn btn-danger">حذف</button>
+                    <button
+                      className="btn btn-danger"
+                      onClick={() => openDeleteCourseDialog(course)}
+                    >
+                      حذف
+                    </button>
                   </td>
                 </tr>
               ))}
@@ -80,7 +90,7 @@ const CourseTable = () => {
           }}
         >
           <Pagination
-            totalCourses={courseData.length}
+            totalCourses={filteredCourses.length}
             currentPage={currentPage}
             perPage={perPage}
             onChangePage={handleChangePage}

@@ -9,7 +9,7 @@ export const dashContext = createContext({
   setSearch: () => {},
   openNewCourseDialog: () => {},
   openEditCourseDialog: () => {},
-  opneDeleteCourseDialog: () => {},
+  openDeleteCourseDialog: () => {},
   courseData: [],
   filteredCourses: [],
   sortCoursesAsc: () => {},
