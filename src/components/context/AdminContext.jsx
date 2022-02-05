@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { dashContext } from "./dashContext";
 import { paginate } from "./../../util/paginate";
 import NewCourseDialog from "./../admin/dialogs/newCourseDialog";
 import EditCourseDialog from "../admin/dialogs/EditDialog";
 import DeleteCourseDialog from "../admin/dialogs/DeleteCourseDialog";
+import { orderBy } from "lodash";
+import SimpleReactValidator from "simple-react-validator";
 
 const AdminContext = ({ children, courses }) => {
   const [currentPage, setcurrentPage] = useState(1);
@@ -21,6 +23,18 @@ const AdminContext = ({ children, courses }) => {
   const closeNewCourseDialog = () => setNewCourseDialog(false);
 
   useEffect(() => setCoursesList(courses), [courses]);
+
+  const validator = useRef(
+    new SimpleReactValidator({
+      messages: {
+        required: "پر کردن این فیلد الزامی است.",
+        min: "نام دوره نباید کمتر از 5 کاراکتر باشد.",
+        email: "ایمیل نوشته شده صحیح نمی باشد.",
+        integer: "وارد کردن حروف مورد قبول نیست",
+      },
+      element: (message) => <div style={{ color: "red" }}>{message}</div>,
+    })
+  );
 
   const openEditCourseDialog = (course) => {
     setEditCourseDialog(true);
@@ -47,6 +61,14 @@ const AdminContext = ({ children, courses }) => {
 
   const courseData = paginate(filteredCourses, currentPage, perPage);
 
+  const sortCoursesAsc = () => {
+    setCoursesList(orderBy(coursesList, "price", "asc"));
+  };
+
+  const sortCoursesDesc = () => {
+    setCoursesList(orderBy(coursesList, "price", "desc"));
+  };
+
   return (
     <dashContext.Provider
       value={{
@@ -59,6 +81,9 @@ const AdminContext = ({ children, courses }) => {
         openDeleteCourseDialog,
         setSearch,
         filteredCourses,
+        sortCoursesAsc,
+        sortCoursesDesc,
+        validator,
       }}
     >
       <NewCourseDialog

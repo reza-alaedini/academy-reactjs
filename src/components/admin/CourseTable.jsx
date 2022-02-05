@@ -15,6 +15,8 @@ const CourseTable = () => {
     openDeleteCourseDialog,
     filteredCourses,
     setSearch,
+    sortCoursesAsc,
+    sortCoursesDesc,
   } = context;
 
   return (
@@ -40,7 +42,22 @@ const CourseTable = () => {
               <tr>
                 <th>عنوان دوره</th>
                 <th>تصویر دوره</th>
-                <th>قیمت دوره (تومان)</th>
+                <th>
+                  قیمت دوره (تومان)
+                  <span
+                    className="fa fa-long-arrow-up"
+                    style={{ margin: "0.5em", cursor: "pointer" }}
+                    onClick={sortCoursesDesc}
+                    title="مرتب سازی نزولی"
+                  ></span>
+                  <span
+                    className="fa fa-long-arrow-down"
+                    style={{ margin: "0.5em", cursor: "pointer" }}
+                    onClick={sortCoursesAsc}
+                    title="مرتب سازی صعودی"
+                  ></span>
+                </th>
+
                 <th>ویرایش</th>
                 <th>حذف</th>
               </tr>
@@ -54,7 +71,8 @@ const CourseTable = () => {
                     <a
                       href={`https://toplearnapi.ghorbany.dev/${course.imageUrl}`}
                       target="_blank"
-                      className="btn btn-info" rel="noreferrer"
+                      className="btn btn-info"
+                      rel="noreferrer"
                     >
                       تصویر دوره
                     </a>
