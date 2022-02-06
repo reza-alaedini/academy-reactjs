@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { context } from "./context";
 import { useDispatch } from "react-redux";
@@ -31,12 +31,22 @@ const UserContext = ({ children }) => {
     })
   );
 
-  const resetStates = () => {
-    setFullname("");
-    setEmail("");
-    setPassword("");
-    setPolicy();
-  };
+  useEffect(() => {
+    return () => {
+      setFullname();
+      setEmail();
+      setPassword();
+      setPolicy();
+      forceUpdate();
+    };
+  }, []);
+
+  // const resetStates = () => {
+  //   setFullname("");
+  //   setEmail("");
+  //   setPassword("");
+  //   setPolicy();
+  // };
 
   const handleRegister = async (event) => {
     event.preventDefault();
@@ -54,7 +64,6 @@ const UserContext = ({ children }) => {
           success("شخص با موفقیت اضافه شد !");
           dispatch(hideLoading());
           navigate("/login", { replace: true });
-          resetStates();
         }
       } else {
         validator.current.showMessages();
@@ -79,20 +88,17 @@ const UserContext = ({ children }) => {
         dispatch(showLoading());
         const { status, data } = await loginUser(user);
         if (status === 200) {
-          // console.log(data);
           success("کاربر با موفقیت وارد شد !");
           localStorage.setItem("token", data.token);
           dispatch(addUser(decode(data.token).payload.user));
           dispatch(hideLoading());
           navigate("/", { replace: true });
-          resetStates();
         }
       } else {
         validator.current.showMessages();
         forceUpdate(1);
       }
     } catch (ex) {
-      // console.log(ex);
       error("مشکلی پیش آمد !");
       dispatch(hideLoading());
     }
