@@ -26,7 +26,7 @@ const SingleCourse = ({ match }) => {
               <NavLink to="/"> آکادمی </NavLink>
             </li>
             <li className="breadcrumb-item active">
-              <NavLink to="/"> دوره ها </NavLink>
+              <NavLink to="/archive"> دوره ها </NavLink>
             </li>
             <li className="breadcrumb-item active" aria-current="page">
               {course.title}

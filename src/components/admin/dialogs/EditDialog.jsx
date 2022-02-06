@@ -1,7 +1,7 @@
 import { DialogContent, DialogOverlay } from "@reach/dialog";
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { handleUpdateCourse } from './../../../Redux/Actions/courses';
+import { handleUpdateCourse } from "./../../../Redux/Actions/courses";
 
 const EditCourseDialog = ({ closeDialog, showDialog, course }) => {
   const [courseId, setCourseId] = useState();
@@ -34,10 +34,11 @@ const EditCourseDialog = ({ closeDialog, showDialog, course }) => {
     let data = new FormData();
     data.append("title", title);
     data.append("price", price);
-    if (event.target.imageUrl.files[0]) data.append("imageUrl", event.target.imageUrl.files[0]);
+    if (event.target.imageUrl.files[0])
+      data.append("imageUrl", event.target.imageUrl.files[0]);
     else data.append("imageUrl", imageUrl);
     data.append("info", info);
-    
+
     dispatch(handleUpdateCourse(courseId, data));
     closeDialog();
   };
